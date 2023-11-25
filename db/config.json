@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "pr1k1198",
-    "database": "grocerryTest",
+    "password": "",
+    "database": "electronics",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false

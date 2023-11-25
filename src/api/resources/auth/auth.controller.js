@@ -8,15 +8,19 @@ const JWTSIGN=(user,date)=>{
         sub: user.id,
         iam : user.type,
         iat: date.getTime(),
-        exp: new Date().setMinutes(date.getMinutes() + 30)
+        exp: new Date().setHours(date.getHours()+5)
    },process.env.APP_SECRET
-   )
-    
+   ) 
 }
 
 module.exports = {
      adduser(req, res, next) {
         const { firstName, lastName, email, address, phone, password, role, verify } = req.body
+
+        if (!firstName|| !lastName|| !email|| !address||  !password|| !role) {
+            res.status(400).json({errors:['please provide all details']})
+            return
+        }
         try {
 
             const hashpassword=bcrypt.hashSync(password);
@@ -33,10 +37,11 @@ module.exports = {
                         return res.status(200).json({ success: true, msg: "new user is created" })
                     }
                     else {
-                        res.status(500).json({ success: false })
+                        res.status(500).json({ success: false,errors:['user not found'] })
                     }
                 })
                 .catch((err) => {
+                    res.status(409).send({errors:['email is already exist']})
                     next(err);
                 })
 
@@ -60,10 +65,10 @@ module.exports = {
 
                 if (verify) {
                     const token= JWTSIGN(user,date)
-                    res.cookie('XSRF-token',     token, {
-                        expire: new Date().setMinutes(date.getMinutes() + 30),
-                        httpOnly: true, secure: process.env.APP_SECURE
-                    });
+                    // res.cookie('XSRF-token',     token, {
+                    //     expire: new Date().setMinutes(date.getMinutes() + 30),
+                    //     httpOnly: true, secure: process.env.APP_SECURE
+                    // });
                     return res.json({ success: true ,token,role:user.role})      
                 }
 
@@ -73,6 +78,7 @@ module.exports = {
             return res.status(400).json({error:"email is not exist"})
         })
         .catch(err=>{
+            res.json({errors:"email or password is invalid"})
             next(err)
         })
     },

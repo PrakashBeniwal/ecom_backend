@@ -26,4 +26,4 @@
     }
 }; 
 
-module.exports=sanitize;
+module.exports={sanitize};

@@ -1,31 +1,31 @@
 const express=require('express')
-const categoryController=require('./category.controller.js')
-const jwtstrategy=require("../../../middleware/jwtstrategy.js")
+const categoryController=require('./category.controller.js');
+const { jwtstrategy } = require('../../../middleware/strategy.js');
 
 const categoryRouter=express.Router();
 
 // Category routes
-categoryRouter.route('/create').post(categoryController.create)
+categoryRouter.route('/create').post(jwtstrategy,categoryController.create)
 categoryRouter.route('/main-list').get(categoryController.getmainlist)
-categoryRouter.route('/main-list/update').post(categoryController.getMainlistUpdate)
-categoryRouter.route('/main-list/delete').delete(categoryController.deleteMainlist)
+categoryRouter.route('/main-list/update').post(jwtstrategy,categoryController.getMainlistUpdate)
+categoryRouter.route('/main-list/delete').delete(jwtstrategy,categoryController.deleteMainlist)
 
 
 // Subcategory routes
 
-categoryRouter.route('/create-sub').post(categoryController.addSubCategory)
+categoryRouter.route('/create-sub').post(jwtstrategy,categoryController.addSubCategory)
 categoryRouter.route('/sub-list').get(categoryController.getSubCategory)
-categoryRouter.route('/sub-list/update').post(categoryController.getSubCategoryAdd)
-categoryRouter.route('/sub-list/delete').delete(categoryController.getSubCategoryDelete)
+categoryRouter.route('/sub-list/update').post(jwtstrategy,categoryController.getSubCategoryAdd)
+categoryRouter.route('/sub-list/delete').delete(jwtstrategy,categoryController.getSubCategoryDelete)
 categoryRouter.route('/getAllSubCategory').get(categoryController.getAllSubCategoryBySlug)
 
 
 //childcategory routes
 
-categoryRouter.route('/create-sub-child').post(categoryController.addSubChildCategory)
+categoryRouter.route('/create-sub-child').post(jwtstrategy,categoryController.addSubChildCategory)
 categoryRouter.route('/list').get(categoryController.getChildCategoryList)
-categoryRouter.route('/child/deleteById').delete(categoryController.DeleteSubChildCategory)
-categoryRouter.route('/child/updateById').post(categoryController.UpdateSubChildCategory)
+categoryRouter.route('/child/deleteById').delete(jwtstrategy,categoryController.DeleteSubChildCategory)
+categoryRouter.route('/child/updateById').post(jwtstrategy,categoryController.UpdateSubChildCategory)
 categoryRouter.route('/getAllSubChildCategory').get(categoryController.getChildCategoryListByCategory)
 
 

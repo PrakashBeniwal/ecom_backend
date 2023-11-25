@@ -78,7 +78,6 @@ module.exports = {
 
 
     count(req,res,next){
-
         db.order.findAll({
             attributes:['status',[db.sequelize.fn("COUNT",db.sequelize.col("status")),"total"]],
             group:"status"
@@ -91,12 +90,14 @@ module.exports = {
         })
     },
 
-    list(req,res,next){
+    // ["fullname","phone","orderId","discrict","city","states",
+    // "shipping","area","custId"]
 
+    list(req,res,next){
         db.order.findAll({
-            include:[{model:db.Address,attributes:["fullname","phone","orderId","discrict","city","states",
-        "shipping","area","custId"]},{model:db.Cart}],
-        order:[["createdAt","DESC"]]
+            include:[{model:db.Address, attributes:{exclude:["customerId"]}},{model:db.Cart}],
+        order:[["createdAt","DESC"]],
+        attributes:{exclude:["customerId"]}
         })
         .then(order=>{
             return res.status(200).send({order:order,success:true})
@@ -110,7 +111,8 @@ module.exports = {
             where:{custId:req.body.id},
             include:[{model:db.Address,attributes:["fullname","phone","orderId","discrict","city","states",
             "shipping","area","custId"]},{model:db.Cart}],
-            order:[["createdAt","desc"]]
+            order:[["createdAt","desc"]],
+            attributes:{exclude:["customerId"]}
         })
         .then(order=>{
             return res.status(200).send({order:order,success:true})

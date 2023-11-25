@@ -1,7 +1,7 @@
 const express=require('express')
 const productController=require('./product.controller.js')
-const jwtstrategy=require("../../../middleware/jwtstrategy.js")
-const sanitizer=require("../../../middleware/sanitizer.js")
+const jwtstrategy=require("../../../middleware/jwtstrategy_x.js")
+const {sanitize}=require("../../../middleware/sanitizer.js")
 // const multer= require('multer');
 const upload=require("../../../awsbucket.js")
 // const upload=multer();
@@ -12,7 +12,7 @@ productRouter.route('/add').post( upload.single('photo'),productController.creat
 productRouter.route('/getAllProductList').get(productController.getAllProductList)
 productRouter.route('/getAllPhoto').get(productController.getAllPhoto)
 productRouter.route('/upload-img').post( upload.array('file', 10), productController.multiplePhotoUpload);
-productRouter.route('/update').post(sanitizer(),upload.single("photo"),productController.update)
+productRouter.route('/update').post(sanitize(),upload.single("photo"),productController.update)
 productRouter.route('/delete').delete(productController.delete)
 
 

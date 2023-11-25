@@ -1,7 +1,7 @@
 const express=require('express')
 const locationController=require('./location.controller.js')
-const jwtstrategy=require("../../../middleware/jwtstrategy.js")
-const sanitizer=require("../../../middleware/sanitizer.js")
+const jwtstrategy=require("../../../middleware/jwtstrategy_x.js")
+const {sanitize}=require("../../../middleware/sanitizer.js")
 const multer= require('multer');
 
 const upload=multer();
@@ -18,7 +18,7 @@ locationRouter.route('/area/create').post(locationController.createArea)
 locationRouter.route('/area/getAllAreaList').get(locationController.getAreaList)
 locationRouter.route('/area/update').post(locationController.updateArea)
 locationRouter.route('/area/delete').delete(locationController.deleteArea)
-locationRouter.route('/area/list/getbyid').get(sanitizer(),locationController.getAreaListById);
+locationRouter.route('/area/list/getbyid').get(sanitize(),locationController.getAreaListById);
 
 // area list
 // /area/list/getbyid

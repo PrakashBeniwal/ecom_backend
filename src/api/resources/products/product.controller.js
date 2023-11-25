@@ -3,7 +3,8 @@ const db = require('../../../models')
 const jwt=require("jsonwebtoken")
 const bcrypt=require('bcrypt-nodejs')
 const { Op } = require("sequelize");
-const AWS=require("aws-sdk")
+const AWS=require("aws-sdk");
+const { queue } = require('../../../kue');
 
 const s3 = new AWS.S3({
     accessKeyId: 'AKIA2ZJXAJNPI4CK5KOK',
@@ -285,7 +286,6 @@ getAllGroceryStaple(req,res,next){
 // getProductById
 
 getProductById(req,res,next){
-
     db.product.findOne({
         where:{id:req.query.id},
         include:{model:db.productphoto}
@@ -381,12 +381,12 @@ async multiplePhotoUpload(req, res, next) {
         where: { id: productId },
     }).then(r => {
         if (r) {
-            return db.productphoto.bulkCreate(attachmentEntries)
-            // queue.create('img-upload', {
-            //     productId: productId,
-            //     productName: r.item_name,
-            //     attachmentEntries: attachmentEntries,
-            // }).save();
+            // return db.productphoto.bulkCreate(attachmentEntries)
+           return queue.create('img-upload', {
+                productId: productId,
+                productName: r.item_name,
+                attachmentEntries: attachmentEntries,
+            }).save();
         }
         throw new RequestError('ProductId is not found')
     }).then(r => {

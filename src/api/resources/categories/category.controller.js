@@ -18,7 +18,7 @@ module.exports = {
                 })
                 .then((cat) => {
                     if (cat) {
-                        return res.status(200).json({ success: true, msg: "successfully inserted category" })
+                        return res.status(200).json({ success: true, msg: "successfully inserted category",data:cat })
                     }
                     else {
                         res.status(500).json({ success: false })
@@ -168,7 +168,8 @@ module.exports = {
         db.SubChildCategory.findAll({
             include: [{ model: db.SubCategory, attributes: ['id', 'sub_name'], include: [{ model: db.category, attributes: ["id", "name"] }] }]
             // include:[{model:db.SubCategory,attributes:["id","sub_name"],include:{model:db.Category,attributes:["id","name"]}}]
-        }).then(list=>{
+        })
+        .then(list=>{
             if (list) {
                 return res.status(200).send({success:true,data:list})
             }

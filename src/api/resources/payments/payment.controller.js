@@ -2,6 +2,7 @@ const { error } = require('joi/lib/types/alternatives')
 const db = require('../../../models')
 const jwt=require("jsonwebtoken")
 const bcrypt=require('bcrypt-nodejs')
+const Razorpay=require('razorpay')
 
 const JWTSIGN=(user,date)=>{
    return jwt.sign({
@@ -18,8 +19,8 @@ module.exports = {
        /* Add user api start here................................*/
        async orderDetails(req, res, next) {
         const instance = new Razorpay({
-            key_id:  'rzp_live_VHO6uZelazZ0VR',
-            key_secret: 'QoeuInxjN8I5EDJ46O4fsPHz',
+            key_id:  'rzp_test_fAULtJVrHHhIjX',
+            key_secret: '5zUGYvUsOPKyQJ6BkB1BnJix',
             // key_id: 'rzp_test_gJ29s3lexhVYEm',
             // key_secret: 'PzSyLipuA0yMPjWLy4a8QgzV',
         });
@@ -81,8 +82,8 @@ module.exports = {
 
     async findOrderList(req, res, next) {
         const instance = new Razorpay({
-            key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_VHO6uZelazZ0VR',
-            key_secret: process.env.RAZORPAY_SECRET || 'QoeuInxjN8I5EDJ46O4fsPHz',
+            key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_fAULtJVrHHhIjX',
+            key_secret: process.env.RAZORPAY_SECRET || '5zUGYvUsOPKyQJ6BkB1BnJix',
         });
         try {
             let { orderCreationId, razorpayPaymentId, razorpayOrderId, custId } = req.body;

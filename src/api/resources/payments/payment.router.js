@@ -1,6 +1,6 @@
 const express=require('express')
 const paymentController=require('./payment.controller.js')
-const jwtstrategy=require("../../../middleware/jwtstrategy.js")
+const jwtstrategy=require("../../../middleware/jwtstrategy_x.js")
 
 const paymentRouter=express.Router();
 paymentRouter.route('/orders').post( paymentController.orderDetails);

@@ -2,6 +2,7 @@ const { error } = require('joi/lib/types/alternatives')
 const db = require('../../../models')
 const jwt=require("jsonwebtoken")
 const bcrypt=require('bcrypt-nodejs')
+const mailer = require('../../../mailer')
 
 const JWTSIGN=(user,date)=>{
    return jwt.sign({
@@ -28,8 +29,9 @@ module.exports = {
                     return db.customer.create({ firstName, lastName, email, userid, phone, password:hashpassword, gender })
 
                 })
-                .then((user) => {
+                .then(async(user) => {
                     if (user) {
+                       await mailer.sendEmail(email);
                         return res.status(200).json({ success: true, msg: "new user is created" })
                     }
                     else {
@@ -37,6 +39,7 @@ module.exports = {
                     }
                 })
                 .catch((err) => {
+                    res.status(409).send({errors:['email is already in use please login']})
                     next(err);
                 })
 
@@ -48,32 +51,15 @@ module.exports = {
 
 
 
-    login(req,res,next){
-
-        const {email,password}=req.body;
-        const date=new Date();
-        db.customer.findOne({where:{email}})
-        .then(user=>{
-            if (user) {
-
-                const verify=bcrypt.compareSync(password,user.password);
-
-                if (verify) {
-                    const token= JWTSIGN(user,date)
-                    res.cookie('XSRF-token',     token, {
-                        expire: new Date().setMinutes(date.getMinutes() + 30),
-                        httpOnly: true, secure: process.env.APP_SECURE
-                    });
-                    return res.json({ success: true ,token,role:user.role})      
-                }
-
-                throw new RequestError('email or password is invalid',400)
-            }
-	return res.json({success:false});
-        })
-        .catch(err=>{
-            next(err)
-        })
+    async login(req, res, next) {
+        var date = new Date();
+        var token = JWTSIGN(req.user, date);
+        res.cookie('XSRF-token',     token, {
+            expire: new Date().setMinutes(date.getMinutes() + 30),
+            httpOnly: true, secure: process.env.APP_SECURE
+        });
+        
+        return res.status(200).json({ success: true ,token});
     },
 
     finduserByEmail(req,res,next){

@@ -1,7 +1,7 @@
 const express=require('express')
 const vendorController=require('./vendor.controller.js')
-const jwtstrategy=require("../../../middleware/jwtstrategy.js")
-const sanitizer=require("../../../middleware/sanitizer.js")
+const jwtstrategy=require("../../../middleware/jwtstrategy_x.js")
+const {sanitize}=require("../../../middleware/sanitizer.js")
 const multer= require('multer');
 
 const upload=multer();
